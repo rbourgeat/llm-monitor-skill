@@ -7,6 +7,10 @@ to **AI** or **human**.
 The UI is English-only, dependency-free, light/dark themed, and runs on `127.0.0.1`. No account,
 cloud service, database or package install is needed.
 
+![LLM Monitor local kanban board](ui/demo.png)
+
+*Projects, custom columns, AI/human provenance and project activity on one local board.*
+
 ## Install
 
 ### LLM / agent — automatic install
