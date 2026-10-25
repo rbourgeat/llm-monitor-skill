@@ -260,8 +260,13 @@ kanban.py             portable entrypoint
 app/                  model, store, cards, projects, git/docs probes, brief, CLI, API/server
 ui/                   static HTML/CSS/JS
 tests/smoke.py        end-to-end smoke test
+LICENSE               MIT license
 ```
 
 The skill is portable: copy the whole directory into another harness's skill root; Python 3.9+
 stdlib only. `kanban.py` adds its own directory to `sys.path`, so it does not depend on the harness
 runtime. Do not install the same skill twice via a copy and a symlink.
+
+## License
+
+MIT — see [LICENSE](LICENSE). Copyright (c) 2026 Raphaël Bourgeat.
