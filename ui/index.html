@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>LLM MONITOR</title>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("kanban-theme");
+        var dark = saved === "dark" || (!saved && window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.setAttribute("data-theme", "dark");
+      } catch (error) {}
+    })();
+  </script>
+  <style>
+    html { background: #f5f6fa; }
+    html[data-theme="dark"] { background: #0e1117; }
+  </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="components.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M2 7h12M7 2v12"/></svg></span>
+        <div>
+          <h1>LLM MONITOR</h1>
+          <p id="server-status">Local board</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn ghost" data-action="refresh" title="Reload board"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M13.5 8a5.5 5.5 0 1 1-1.7-4"/><path d="M13.5 2.5v3.5H10"/></svg>Refresh</button>
+        <button class="btn ghost" data-action="events" title="Open recent events"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5.5"/><path d="M8 4.5v3.5l2.2 1.4"/></svg>Events</button>
+        <div class="settings-wrap">
+          <button class="btn ghost" id="settings-button" data-action="settings" aria-haspopup="true" aria-expanded="false" aria-controls="settings-menu" title="Open settings"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 2v12M8 2v12M12 2v12"/><circle cx="4" cy="6" r="1.8"/><circle cx="8" cy="10" r="1.8"/><circle cx="12" cy="4" r="1.8"/></svg>Settings</button>
+          <div id="settings-menu" class="settings-menu hidden" aria-label="Settings">
+            <button class="settings-item" type="button" data-action="theme" title="Toggle light or dark">
+              <span class="settings-item-label">Theme</span>
+              <span id="settings-theme-value" class="settings-item-value">Light</span>
+            </button>
+            <div class="settings-item settings-server" role="status">
+              <span id="settings-sync-dot" class="sync-dot" aria-hidden="true"></span>
+              <span id="settings-server-status" class="settings-item-value">Server on</span>
+              <span id="settings-server-port" class="settings-item-value settings-server-port" title="Server port"></span>
+            </div>
+          </div>
+        </div>
+        <button class="btn primary" data-action="add-card"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3v10M3 8h10"/></svg>New card</button>
+      </div>
+    </header>
+
+    <div id="timer-banner" class="timer-banner hidden"></div>
+    <div id="toast" class="toast hidden" role="status"></div>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Projects</h2>
+            <button class="icon-btn" data-action="add-project" title="Register a local project" aria-label="Register a local project"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3v10M3 8h10"/></svg></button>
+          </div>
+          <div id="project-list" class="project-list"></div>
+          <div id="project-detail" class="project-detail"></div>
+          <div id="overview" class="overview"></div>
+        </section>
+      </aside>
+
+      <section class="board-panel">
+        <div class="board-toolbar">
+          <div id="filters" class="filter-group" role="group" aria-label="Card filters"></div>
+          <label class="select-wrap">
+            <span class="sr-only">Filter by project</span>
+            <select id="project-filter"></select>
+          </label>
+          <label class="select-wrap">
+            <span class="sr-only">Filter by priority</span>
+            <select id="priority-filter">
+              <option value="">All priorities</option>
+              <option value="urgent">Urgent</option>
+              <option value="high">High</option>
+              <option value="normal">Normal</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
+          <label class="select-wrap">
+            <span class="sr-only">Sort cards</span>
+            <select id="sort-order">
+              <option value="priority">Priority first</option>
+              <option value="updated">Recently updated</option>
+            </select>
+          </label>
+          <input id="search" class="search" type="search" placeholder="Search title, body, tags…">
+          <button class="btn ghost" data-action="manage-columns" title="Manage columns"><svg class="icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M6 2v12M10 2v12"/></svg>Columns</button>
+        </div>
+        <div id="board" class="board"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Local-only · AI and human changes are tagged</span>
+      <span id="footer-home"></span>
+    </footer>
+  </div>
+
+  <div id="modal-root"></div>
+
+  <script src="api.js"></script>
+  <script src="util.js"></script>
+  <script src="icons.js"></script>
+  <script src="dropdowns.js"></script>
+  <script src="render.js"></script>
+  <script src="modals.js"></script>
+  <script src="modals_admin.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

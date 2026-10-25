@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.venv/
+venv/
+data.json
+data.json.bak
+data.corrupt-*.json
+server.json
+server.log
+kanban.lock
+attachments/
